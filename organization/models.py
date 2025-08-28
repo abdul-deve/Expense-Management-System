@@ -9,10 +9,28 @@ class TimeStampUniqueId(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,db_index=True)
     created_at  =models.DateTimeField(auto_now_add=True)
     updated_at  =models.DateTimeField(auto_now=True)
+    class Meta:
+        abstract = True
 
 User = get_user_model()
 
+from django.db import models
+from django.contrib.auth import get_user_model
+from uuid import uuid4
+
+User = get_user_model()
+
+class TimeStampUniqueId(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
 class Organization(TimeStampUniqueId):
+    id = models.UUIDField(primary_key=True,default=uuid4,db_index=True)
     ORG_TYPES = [
         ("IT", "Information Technology"),
         ("FIN", "Finance"),
@@ -29,7 +47,7 @@ class Organization(TimeStampUniqueId):
     name  = models.CharField(max_length=255)
     type = models.CharField(max_length=25,choices=ORG_TYPES)
     address = models.CharField(max_length=50)
-    num_of_employee = models.IntegerField(default=0)
+    num_of_employee = models.IntegerField(default=0,null=True)
     max_employee = models.IntegerField()
 
     def current_employee_count(self):
